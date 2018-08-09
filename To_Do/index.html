@@ -2,9 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ToDo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
 </head>
 <body>
+    <div id="container1">
 
+    </div>
+    <div class="container2">
+        <h1>Add Event</h1>
+        <form action="#">
+            <input id="name" type="text" placeholder="Name">
+            <textarea id="text" placeholder="Describe"></textarea>
+            <input id="time" class="time" type="date">
+            <button id="addEvent">Add Event</button>
+        </form>
+    </div>
 </body>
+<script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCt_53VJb_zBDZNGVL57HHW06Z6JfF47bw",
+        authDomain: "todookten.firebaseapp.com",
+        databaseURL: "https://todookten.firebaseio.com",
+        projectId: "todookten",
+        storageBucket: "todookten.appspot.com",
+        messagingSenderId: "984734951795"
+    };
+    firebase.initializeApp(config);
+</script>
+<script src="app.js"></script>
 </html>

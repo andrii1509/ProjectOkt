@@ -1,0 +1,43 @@
+#container1{
+    width: 60%;
+    border: 2px solid red;
+    margin: 50px auto;
+}
+.item:hover{
+    cursor: pointer;
+    background: rgba(0,0,0,0.4);
+}
+.item{
+    height: 200px;
+    text-align: center;
+    width: 90%;
+    margin: 20px auto;
+    border: 2px solid red;
+}
+.container2{
+    width: 60%;
+    margin: 0 auto;
+}
+input{
+    margin: 0 auto;
+    width: 80%;
+    height: 50px;
+}
+form{
+    width: 90%;
+    margin: 0 auto;
+}
+.time{
+    width: 50%;
+}
+textarea{
+    margin: 0 auto;
+    width: 80%;
+    height: 100px;
+}
+button{
+    width: 200px;
+    height: 50px;
+    float: right;
+    margin: 0 20% 0 0;
+}
