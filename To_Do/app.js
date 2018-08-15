@@ -5,6 +5,7 @@ function initMap() {
         zoom: 8
     });
 }
+let db=firebase.firestore();
 let arrCurrent = [];
 let arrHistory = [];
 let allEvents =[];
@@ -15,25 +16,41 @@ function showHistoryAndCurrent(arr){
 }
 function sortArr(arr) {
     let now = Date.parse(Date());
-    arr.sort(function (a,b) {
+    arr.sort(function (a, b) {
 
         let dateA = Date.parse(a.date);
         let dateB = Date.parse(b.date);
         return dateA - dateB
     });
-    arr.forEach(item =>{
-        if (Date.parse(item.date)< now){
+    arr.forEach(item => {
+        if (Date.parse(item.date) < now) {
             arrHistory.push(item)
-        } else{
+        } else {
             arrCurrent.push(item)
         }
 
     })
-
 }
-let db=firebase.firestore();
+function light(obj, block){
+    let now = Date.parse(Date());
+    let oneDay = 86400000;
+    let objDate = Date.parse(obj.date);
+    if (now + (oneDay*3) >= objDate + oneDay) {
+        block.css({
+            "background" : "rgba(220, 131, 2, 0.3)",
+            "border" : "2px solid orange"
+        });
+    }
+    if (now + oneDay >= objDate) {
+        block.css({
+            "background" : "rgba(150, 7, 0, 0.3)",
+            "border" : "2px solid red"
+        });
+    }
+}
 function showEvents(obj) {
     let block = $("<div>");
+    light(obj, block);
     block.addClass("item");
     let name = $("<h3>");
     let dateTime = $("<h4>");
@@ -108,15 +125,18 @@ db.collection("events")
             allEvents.push(obj);
         });
         sortArr(allEvents);
+        $("#lab").text("Current Tasks");
         arrCurrent.forEach(item =>{
            showEvents(item)
         });
         $("#curr").click(function () {
             $("#eventContainer").html("");
+            $("#lab").text("Current Tasks");
             showHistoryAndCurrent(arrCurrent)
         });
         $("#history").click(function () {
             $("#eventContainer").html("");
+            $("#lab").text("history Tasks");
             showHistoryAndCurrent(arrHistory)
         });
     })
