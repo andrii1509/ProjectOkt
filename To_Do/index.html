@@ -2,23 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo</title>
     <link rel="stylesheet" href="style.css">
-    <script src="./node_modules/jquery/dist/jquery.js"></script>
 </head>
 <body>
-    <div id="container1">
+<section>
+    <div class="container1">
+        <div>
+            <form action="#">
+                <input id="name" type="text" placeholder="name">
+                <textarea id="desc" placeholder="medescription"></textarea>
+                <h3>Deadline</h3>
+                <input id="date" type="date" placeholder="Deadline">
+                <input id="time" type="time">
+            </form>
+            <button id="add">Add event</button>
+            <h2 id="success"></h2>
+        </div>
+        <div id="map">
+        </div>
+    </div>
+    <div class="container2" id="list">
+        <button id="curr" class="navBtn">Current Events</button>
+        <button id="history" class="navBtn">History</button>
+        <button class="navBtn">Filter</button>
+        <div id="fil"></div>
+        <div id="eventContainer">
 
+        </div>
     </div>
-    <div class="container2">
-        <h1>Add Event</h1>
-        <form action="#">
-            <input id="name" type="text" placeholder="Name">
-            <textarea id="text" placeholder="Describe"></textarea>
-            <input id="time" class="time" type="date">
-            <button id="addEvent">Add Event</button>
-        </form>
-    </div>
+</section>
 </body>
 <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
 <script>
@@ -33,5 +47,8 @@
     };
     firebase.initializeApp(config);
 </script>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="app.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtkwufYAFhkkVz7Sgi2DKzpc-GivK6dQ8&callback=initMap"
+        async defer></script>
 </html>

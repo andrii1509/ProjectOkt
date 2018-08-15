@@ -1,43 +1,113 @@
-#container1{
-    width: 60%;
-    border: 2px solid red;
-    margin: 50px auto;
+*{
+    box-sizing: border-box;
 }
-.item:hover{
-    cursor: pointer;
-    background: rgba(0,0,0,0.4);
+section{
+    width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
 }
-.item{
-    height: 200px;
-    text-align: center;
-    width: 90%;
-    margin: 20px auto;
-    border: 2px solid red;
+.container1{
+    background: silver;
+    width: 800px;
+    margin: 20px;
+    justify-content: space-between;
+    height: 865px;
+    box-shadow: 6px 6px 28px 2px rgba(0,0,0,0.77);
 }
 .container2{
-    width: 60%;
-    margin: 0 auto;
-}
-input{
-    margin: 0 auto;
-    width: 80%;
-    height: 50px;
+    background: silver;
+    width: 500px;
+    margin: 20px;
+    justify-content: space-between;
+    box-shadow: 6px 6px 28px 2px rgba(0,0,0,0.77);
 }
 form{
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
 }
-.time{
-    width: 50%;
+input{
+    height: 40px;
+    font-size: 25px;
+}
+#name{
+    margin: 40px 5%;
+    width: 90%;
 }
 textarea{
-    margin: 0 auto;
-    width: 80%;
+    width: 90%;
+    margin: 10px 5%;
     height: 100px;
+    font-size: 20px;
 }
-button{
-    width: 200px;
+form h3{
+    margin: 10px 5%;
+}
+.container1 h2{
+    margin: 10px;
+    text-align: center;
+}
+#date , #time{
+    width: 40%;
+    margin: 0 5% 15px;
+}
+#add{
+    width: 40%;
     height: 50px;
-    float: right;
-    margin: 0 20% 0 0;
+    margin: 0 5% 20px 55%;
+    font-size: 20px;
+}
+.navBtn{
+    width: 96%;
+    margin: 15px 2%;
+    height: 60px;
+    font-size: 20px;
+}
+#his-fil, #eventContainer{
+    width: 96%;
+    margin: 2%;
+}
+#map{
+    width: 96%;
+    margin: 30px 2% 2%;
+    height: 350px;
+}
+.item{
+    box-shadow: 10px 12px 48px -22px rgba(0,0,0,1);
+    text-align: center;
+    width: 96%;
+    margin: 2%;
+    border: 2px solid black;
+    border-radius: 2%;
+    cursor: pointer;
+}
+.item:active{
+    box-shadow: inset 6px 6px 214px 14px rgba(0,0,0,0.77);
+}
+.item:hover{
+    background: rgba(0, 0, 0, 0.3);
+}
+.descItem{
+    text-align: center;
+    width: 96%;
+    margin: 10px 2%;
+    border: 2px solid black;
+    border-radius: 5%;
+    padding: 20px;
+}
+.removeBtn{
+    width: 96%;
+    margin: 2%;
+    height: 60px;
+}
+@media screen and (max-width: 1000px){
+    section{
+        width: 90%;
+        margin: 50px auto;
+        flex-direction: column;
+    }
+    .container1, .container2{
+        width: 96%;
+        margin: 2%;
+        font-size: 20px;
+    }
 }
