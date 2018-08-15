@@ -119,3 +119,7 @@ h3{
 button:hover{
     background: rgba(0, 0, 0, 0.2);
 }
+#fil input{
+    width: 90%;
+    margin: 30px 5%;
+}

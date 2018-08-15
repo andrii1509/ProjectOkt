@@ -64,13 +64,17 @@ function showEvents(obj) {
     let btn = $("<button>");
     btn.addClass("removeBtn")
         .text("Remove")
-        .click(function () {
-
+        .on("click", function (event) {
+            event.stopPropagation();
+            removeEvent(obj, block)
         });
+    block.append(p);
+    block.append(btn);
+    p.toggle();
+    btn.toggle();
     block.click(function () {
-        console.log(obj.desc);
-        block.append(p);
-        block.append(btn)
+        p.fadeToggle();
+        btn.fadeToggle();
     });
     $("#eventContainer").append(block)
 }
@@ -111,17 +115,45 @@ function addEvent(){
 $("#add").click(function () {
     addEvent()
 });
-function  removeEvent() {
-
+function  removeEvent(obj, block) {
+    db.collection("events")
+        .doc(`${obj.id}`)
+        .delete()
+        .then(function () {
+            block.text("Removed");
+            console.log("success");
+        })
 }
+$("#filter").click(function (){
+    $("#lab").text("Search");
+    $("#fil").html("");
+    $("#eventContainer").html("");
+    allEvents.forEach(function (item) {
+        showEvents(item)
+    });
+    filterEvent()
+});
 function filterEvent() {
-
+    let inp = $("<input type='text' placeholder='name'>");
+    $("#fil").append(inp);
+    inp.on("input", function () {
+        $("#eventContainer").html("");
+        let val = inp.val();
+        console.log(val);
+        allEvents.filter(item =>{
+            if (item.name.includes(val)){
+                showEvents(item)
+            }
+        })
+    });
 }
 db.collection("events")
     .get()
     .then(function (dataList) {
         dataList.forEach(data =>{
             let obj = data.data();
+            obj.id = data.id;
+            console.log(obj);
             allEvents.push(obj);
         });
         sortArr(allEvents);
