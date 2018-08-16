@@ -74,6 +74,7 @@ form h3{
     height: 350px;
 }
 .item{
+    background: rgba(7, 215, 114, 0.3);
     box-shadow: 10px 12px 48px -22px rgba(0,0,0,1);
     text-align: center;
     width: 96%;
@@ -82,11 +83,12 @@ form h3{
     border-radius: 2%;
     cursor: pointer;
 }
-.item:active{
-    box-shadow: inset 6px 6px 214px 14px rgba(0,0,0,0.77);
+.item input{
+    margin: 2%;
+    font-size: 15px;
 }
-.item:hover{
-    background: rgba(0, 0, 0, 0.3);
+.item button{
+    font-size: 20px;
 }
 .descItem{
     text-align: center;
@@ -117,7 +119,10 @@ h3{
     text-align: center;
 }
 button:hover{
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+}
+button{
+    background: rgba(0, 0, 0, 0.2);;
 }
 #fil input{
     width: 90%;
