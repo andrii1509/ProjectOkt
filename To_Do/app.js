@@ -1,27 +1,42 @@
 var map;
-let positionLat = 0;
-let positionLng =0;
-
 function getLocation() {
-        navigator.geolocation.watchPosition(showPosition)
+        navigator.geolocation.getCurrentPosition(showPosition)
+}
+let cord = {};
+let eventLatLoc = 0;
+let eventLngLoc = 0;
+function showPosition(position) {
+    return cord = {
+        lat : position.coords.latitude,
+        lng : position.coords.longitude
+    };
 }
 
-function showPosition(position) {
-    positionLat = position.coords.latitude;
-    positionLng = position.coords.longitude;
-    console.log(positionLng, positionLat);
-}
+console.log(getLocation());
 
 function initMap() {
-    getLocation();
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat : positionLat, lng : positionLng},
-        zoom: 4
-    });
+        getLocation();
+        setTimeout( function () {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat : +cord.lat, lng : +cord.lng},
+                zoom: 8
+            });
+
+            var marker = new google.maps.Marker(
+                {
+                    position:{lat : +cord.lat, lng : +cord .lng},
+                }
+            );
+            marker.setMap(map);
+
+        },2000);
 
 }
 
-
+function currentMarker(obj){
+    eventLatLoc = obj.location.lat;
+    eventLngLoc = obj.location.lng;
+}
 
 
 let db=firebase.firestore();
@@ -212,8 +227,10 @@ function changeEvent(obj, editBtn, name, p, date, time){
                 desc : inpDesc.val(),
                 date : inpDate.val(),
                 time : inpTime.val(),
-                location : ""
-            })
+            },
+                {
+                    merge :  true
+                })
             .then(function () {
                 name.text(inpName.val());
                 p.text(inpDesc.val());
@@ -234,33 +251,43 @@ function changeEvent(obj, editBtn, name, p, date, time){
 }
 
 
-$("#filter").click(function (){
-    $("#lab").text("Search");
+// $("#filter").click(function (){
+//     $("#lab").text("Search");
+//     $("#fil").html("");
+//     $("#eventContainer").html("");
+//     allEvents.forEach(function (item) {
+//         showEvents(item)
+//     });
+//     filterEvent()
+// });
+
+
+
+// function filterEvent() {
+//     let inp = $("<input type='text' placeholder='name'>");
+//     $("#fil").append(inp);
+//     inp.on("input", function () {
+//         $("#eventContainer").html("");
+//         let val = inp.val();
+//         console.log(val);
+//         allEvents.filter(item =>{
+//             if (item.name.includes(val)){
+//                 showEvents(item)
+//             }
+//         })
+//     });
+// }
+$("#search").on("input", function () {
     $("#fil").html("");
     $("#eventContainer").html("");
-    allEvents.forEach(function (item) {
-        showEvents(item)
-    });
-    filterEvent()
+    let val = $("#search").val();
+    console.log(val);
+    allEvents.filter(item =>{
+        if (item.name.includes(val)){
+            showEvents(item)
+        }
+    })
 });
-
-
-
-function filterEvent() {
-    let inp = $("<input type='text' placeholder='name'>");
-    $("#fil").append(inp);
-    inp.on("input", function () {
-        $("#eventContainer").html("");
-        let val = inp.val();
-        console.log(val);
-        allEvents.filter(item =>{
-            if (item.name.includes(val)){
-                showEvents(item)
-            }
-        })
-    });
-}
-
 
 
 db.collection("events")
@@ -280,11 +307,13 @@ db.collection("events")
            showEvents(item)
         });
         $("#curr").click(function () {
+            $("#search").val("");
             $("#eventContainer").html("");
             $("#lab").text("Current Tasks");
             showHistoryAndCurrent(arrCurrent)
         });
         $("#history").click(function () {
+            $("#search").val("");
             $("#eventContainer").html("");
             $("#lab").text("history Tasks");
             showHistoryAndCurrent(arrHistory)
