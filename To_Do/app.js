@@ -11,9 +11,6 @@ function showPosition(position) {
         lng : position.coords.longitude
     };
 }
-
-console.log(getLocation());
-
 function initMap() {
         getLocation();
         setTimeout( function () {
@@ -21,17 +18,15 @@ function initMap() {
                 center: {lat : +cord.lat, lng : +cord.lng},
                 zoom: 8
             });
-
-            var marker = new google.maps.Marker(
+            let marker = new google.maps.Marker(
                 {
                     position:{lat : +cord.lat, lng : +cord .lng},
                 }
             );
             marker.setMap(map);
-
-        },2000);
-
+        },3000);
 }
+
 
 function currentMarker(obj){
     eventLatLoc = obj.location.lat;
@@ -43,6 +38,9 @@ let db=firebase.firestore();
 let arrCurrent = [];
 let arrHistory = [];
 let allEvents =[];
+
+
+
 function showHistoryAndCurrent(arr){
     arr.forEach(item =>{
         showEvents(item)
@@ -102,15 +100,12 @@ function showEvents(obj) {
     light(obj, block);
     block.addClass("item");
     let name = $("<h3>");
-    let time = $("<h4>");
-    time.text(obj.time);
     name.text(obj.name);
     let date = $("<h4>");
     date.text(obj.date);
     block.append(name);
     block.append(date);
-    block.append(time);
-    let p = $("<h4>");
+    let p = $("<p>");
     p.addClass("descItem");
     p.text(`${obj.desc}`);
     let btnChg = $("<button id='change'>");
@@ -118,7 +113,7 @@ function showEvents(obj) {
         .text("Edit")
         .click(function (e) {
             e.stopPropagation();
-            changeEvent(obj, btnChg, name, p, date, time)
+            changeEvent(obj, btnChg, name, p, date)
         });
     let btnRem = $("<button>");
     btnRem.addClass("removeBtn")
@@ -152,13 +147,28 @@ function norm() {
 document.getElementById("name").oninput = norm;
 document.getElementById("date").oninput = norm;
 
+$("#add").click(function () {
+    addEvent()
+});
+
+
+$("#search").on("input", function () {
+    $("#fil").html("");
+    $("#lab").text("Search");
+    $("#eventContainer").html("");
+    let val = $("#search").val();
+    allEvents.filter(item =>{
+        if (item.name.includes(val)){
+            showEvents(item)
+        }
+    })
+});
 
 
 function addEvent(){
     let name = $("#name").val();
     let desc = $("#desc").val();
     let date = $("#date").val();
-    let time = $("#time").val();
     if (name === "") {
         $("#name").css("background", "red")
     }
@@ -171,7 +181,6 @@ function addEvent(){
                 name : name,
                 desc : desc,
                 date : date,
-                time : time,
                 location : ""
             })
             .then(function () {
@@ -187,11 +196,6 @@ function addEvent(){
 
 
 
-$("#add").click(function () {
-    addEvent()
-});
-
-
 function  removeEvent(obj, block) {
     db.collection("events")
         .doc(`${obj.id}`)
@@ -202,22 +206,19 @@ function  removeEvent(obj, block) {
         })
 }
 
-function changeEvent(obj, editBtn, name, p, date, time){
+function changeEvent(obj, editBtn, name, p, date){
     let btn = $("<button class='removeBtn'>")
         .text("Save");
     let inpName = $("<input type='text'>")
         .val(`${obj.name}`);
     let inpDesc = $("<textarea>")
         .val(obj.desc);
-    let inpDate = $("<input type='date'>")
+    let inpDate = $("<input type='datetime-local'>")
         .val(obj.date);
-    let inpTime = $("<input type='time'>")
-        .val(obj.time);
     editBtn.replaceWith(btn);
     name.replaceWith(inpName);
     p.replaceWith(inpDesc);
     date.replaceWith(inpDate);
-    time.replaceWith(inpTime);
     btn.click(function (e) {
         e.stopPropagation();
         db.collection("events")
@@ -226,7 +227,6 @@ function changeEvent(obj, editBtn, name, p, date, time){
                 name: inpName.val(),
                 desc : inpDesc.val(),
                 date : inpDate.val(),
-                time : inpTime.val(),
             },
                 {
                     merge :  true
@@ -235,59 +235,22 @@ function changeEvent(obj, editBtn, name, p, date, time){
                 name.text(inpName.val());
                 p.text(inpDesc.val());
                 date.text(inpDate.val());
-                time.text(inpTime.val());
+                obj.name = inpName.val();
+                obj.desc = inpDesc.val();
+                obj.date = inpDate.val();
                 console.log("Changed");
             });
         btn.replaceWith(editBtn);
         inpName.replaceWith(name);
         inpDesc.replaceWith(p);
         inpDate.replaceWith(date);
-        inpTime.replaceWith(time);
         editBtn.click(function (e) {
             e.stopPropagation();
-            changeEvent(obj, editBtn, name, p, date, time)
+            changeEvent(obj, editBtn, name, p, date)
         });
     });
 }
 
-
-// $("#filter").click(function (){
-//     $("#lab").text("Search");
-//     $("#fil").html("");
-//     $("#eventContainer").html("");
-//     allEvents.forEach(function (item) {
-//         showEvents(item)
-//     });
-//     filterEvent()
-// });
-
-
-
-// function filterEvent() {
-//     let inp = $("<input type='text' placeholder='name'>");
-//     $("#fil").append(inp);
-//     inp.on("input", function () {
-//         $("#eventContainer").html("");
-//         let val = inp.val();
-//         console.log(val);
-//         allEvents.filter(item =>{
-//             if (item.name.includes(val)){
-//                 showEvents(item)
-//             }
-//         })
-//     });
-// }
-$("#search").on("input", function () {
-    $("#fil").html("");
-    $("#eventContainer").html("");
-    let val = $("#search").val();
-    console.log(val);
-    allEvents.filter(item =>{
-        if (item.name.includes(val)){
-            showEvents(item)
-        }
-    })
-});
 
 
 db.collection("events")

@@ -3,14 +3,14 @@
     font-family: "Comic Sans MS", serif;
 }
 section{
-    width: 1400px;
+    width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
 }
 .container1{
     background: silver;
-    width: 800px;
+    width: 700px;
     margin: 20px;
     justify-content: space-between;
     height: 900px;
@@ -18,7 +18,7 @@ section{
 }
 .container2{
     background: silver;
-    width: 500px;
+    width: 400px;
     margin: 20px;
     justify-content: space-between;
     box-shadow: 6px 6px 28px 2px rgba(0,0,0,0.77);
@@ -48,8 +48,8 @@ form h3{
     text-align: center;
     font-style: italic;
 }
-#date , #time{
-    width: 40%;
+#date{
+    width: 45%;
     margin: 0 5% 15px;
 }
 #add{
@@ -91,7 +91,6 @@ form h3{
     font-size: 20px;
 }
 .descItem{
-    text-align: center;
     width: 96%;
     margin: 10px 2%;
     border: 2px solid black;
