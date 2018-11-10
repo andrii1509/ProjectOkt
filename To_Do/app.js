@@ -1,39 +1,77 @@
-var map;
-function getLocation() {
-        navigator.geolocation.getCurrentPosition(showPosition)
-}
-let cord = {};
-let eventLatLoc = 0;
-let eventLngLoc = 0;
-function showPosition(position) {
-    return cord = {
-        lat : position.coords.latitude,
-        lng : position.coords.longitude
-    };
-}
-function initMap() {
-        getLocation();
-        setTimeout( function () {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat : +cord.lat, lng : +cord.lng},
-                zoom: 8
+let markersCurrent = [];
+let markersHistory = [];
+var map, infoWindow;
+function initMap(markers) {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 6
+    });
+    infoWindow = new google.maps.InfoWindow;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        handleLocationError(false, infoWindow, map.getCenter());
+    }
+    markers.forEach(function (item) {
+        let marker = new google.maps.Marker({
+            position: {lat : item.lat, lng : item.lng},
+            title:"Hello World!"
+        });
+        marker.setMap(map);
+    });
+    let myLatlng = new google.maps.LatLng(22,79);
+
+    let marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        title: 'Default Marker',
+        draggable:true
+    });
+
+    google.maps.event.addListener(map,'click',function(event) {
+
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map,
+                title: 'Click Generated Marker',
+                draggable:true
             });
-            let marker = new google.maps.Marker(
-                {
-                    position:{lat : +cord.lat, lng : +cord .lng},
-                }
-            );
-            marker.setMap(map);
-        },3000);
+        }
+    );
+
+    google.maps.event.addListener(marker, 'drag',
+        function(event) {
+            document.getElementById('lat').value = this.position.lat();
+            document.getElementById('lng').value = this.position.lng();
+        });
+
+
+    google.maps.event.addListener(marker,'dragend',function(event) {
+        document.getElementById('lat').value = this.position.lat();
+        document.getElementById('lng').value = this.position.lng();
+        alert('Drag end');
+    });
+
+
 }
-
-
-function currentMarker(obj){
-    eventLatLoc = obj.location.lat;
-    eventLngLoc = obj.location.lng;
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
 }
-
-
 let db=firebase.firestore();
 let arrCurrent = [];
 let arrHistory = [];
@@ -59,11 +97,12 @@ function sortArr(arr) {
     });
     arr.forEach(item => {
         if (Date.parse(item.date) <= now) {
-            arrHistory.push(item)
+            arrHistory.push(item);
+            markersHistory.push(item.location)
         } else {
-            arrCurrent.push(item)
+            arrCurrent.push(item);
+            markersCurrent.push(item.location)
         }
-
     })
 }
 
@@ -172,7 +211,7 @@ function addEvent(){
     if (name === "") {
         $("#name").css("background", "red")
     }
-        else if (date === "") {
+    else if (date === "") {
         $("#date").css("background", "red")
     }
     else{
@@ -224,10 +263,10 @@ function changeEvent(obj, editBtn, name, p, date){
         db.collection("events")
             .doc(`${obj.id}`)
             .set({
-                name: inpName.val(),
-                desc : inpDesc.val(),
-                date : inpDate.val(),
-            },
+                    name: inpName.val(),
+                    desc : inpDesc.val(),
+                    date : inpDate.val(),
+                },
                 {
                     merge :  true
                 })
@@ -259,30 +298,31 @@ db.collection("events")
         dataList.forEach(data =>{
             let obj = data.data();
             obj.id = data.id;
-            console.log(obj);
             allEvents.push(obj);
         });
         sortArr(allEvents);
+        initMap(markersCurrent);
 
 
         $("#lab").text("Current Tasks");
         arrCurrent.forEach(item =>{
-           showEvents(item)
+            showEvents(item)
         });
         $("#curr").click(function () {
             $("#search").val("");
             $("#eventContainer").html("");
             $("#lab").text("Current Tasks");
+            initMap(markersCurrent);
             showHistoryAndCurrent(arrCurrent)
+
         });
         $("#history").click(function () {
             $("#search").val("");
             $("#eventContainer").html("");
             $("#lab").text("history Tasks");
+            initMap(markersHistory);
             showHistoryAndCurrent(arrHistory)
         });
-
-
     })
     .catch(function (err) {
         console.log(err);
